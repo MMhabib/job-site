@@ -28,16 +28,16 @@ const Home = () => {
 
       <Container sx={{ mt: 4, maxWidth: 600 }}>
         <Typography variant="h4" align="center" fontWeight="bold">BROWSE OPEN POSITIONS BY CATEGORY</Typography>
-        <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 4 }}>
+        <Typography variant="body1" align="center" color="text.secondary"  sx={{ mb: 4 }}>
           We are always on the lookout for talented people
         </Typography>
 
         <Box>
           {jobCategories.map((category, index) => (
-            <Paper key={index} elevation={3} sx={{ mb: 1, borderRadius: 4, overflow: "hidden"  }}>
-              <Accordion sx={{ minHeight: 50 ,bgcolor: "grey.200"}}>
+            <Paper key={index} elevation={3} sx={{ mb: 1, borderRadius: 2, overflow: "hidden"  }}>
+              <Accordion sx={{ minHeight: 60 ,bgcolor: "grey.200"}}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography fontWeight="medium">{category}</Typography>
+                  <Typography variant='h6' fontWeight="bold" color='grey.700'>{category}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography color="text.secondary">
