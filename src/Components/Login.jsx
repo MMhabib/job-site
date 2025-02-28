@@ -1,78 +1,93 @@
+import { useState, useContext } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../Provider/Authprovider";
+import { CssVarsProvider } from "@mui/joy/styles";
+import Sheet from "@mui/joy/Sheet";
+import CssBaseline from "@mui/joy/CssBaseline";
+import Typography from "@mui/joy/Typography";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
+import Link from "@mui/joy/Link";
+import Alert from "@mui/joy/Alert";
 
-import { CssVarsProvider} from '@mui/joy/styles';
-import Sheet from '@mui/joy/Sheet';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Typography from '@mui/joy/Typography';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Button from '@mui/joy/Button';
-import Link from '@mui/joy/Link';
-;
+const Login = () => {
+  const { signInUser } = useContext(AuthContext);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
-
-
-function Login() {
-
-  const handleLogin=event=>{
+  const handleLogin = (event) => {
     event.preventDefault();
-    const form=event.target;
-    const email=form.email.value;
-    const password=form.password.value;
-    console.log(email,password);
-  }
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
 
+    signInUser(email, password)
+      .then((userCredential) => {
+        setSuccess("Login successful!");
+        setError("");
+        setTimeout(() => navigate(from, { replace: true }), 1500);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setSuccess("");
+      });
+  };
 
   return (
-    <CssVarsProvider> {/* Wrap the entire app with CssVarsProvider */}
+    <CssVarsProvider>
       <main>
-        {/* <ModeToggle /> */}
         <CssBaseline />
         <Sheet
           sx={{
-            width: 300,
-            mx: 'auto', // margin left & right
-            my: 4, // margin top & bottom
-            py: 3, // padding top & bottom
-            px: 2, // padding left & right
-            display: 'flex',
-            flexDirection: 'column',
+            width: 350,
+            mx: "auto",
+            my: 4,
+            py: 4,
+            px: 3,
+            display: "flex",
+            flexDirection: "column",
             gap: 2,
-            borderRadius: 'sm',
-            boxShadow: 'md',
+            borderRadius: "md",
+            boxShadow: "lg",
+            backgroundColor: "white",
           }}
           variant="outlined"
         >
           <div>
-            <Typography level="h4" component="h1">
-              <b>Welcome!</b>
+            <Typography level="h3" component="h1" sx={{ textAlign: "center" }}>
+              <b>Login</b>
             </Typography>
-            <Typography level="body-sm">Sign in to continue.</Typography>
+            <Typography level="body-sm" sx={{ textAlign: "center", color: "gray" }}>
+              Sign in to continue.
+            </Typography>
           </div>
-         <form onSubmit={handleLogin}>
 
+          {/* Success and Error Alerts */}
+          {success && <Alert variant="soft" color="success">{success}</Alert>}
+          {error && <Alert variant="soft" color="danger">{error}</Alert>}
 
-         <FormControl>
-            <FormLabel>Email</FormLabel>
-            <Input
-              name="email"
-              type="email"
-              placeholder="johndoe@email.com"
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Password</FormLabel>
-            <Input
-              name="password"
-              type="password"
-              placeholder="password"
-            />
-          </FormControl>
-          <Button type='submit' sx={{ mt: 1 /* margin top */ }}>Log in</Button>
-         </form>
+          <form onSubmit={handleLogin}>
+            <FormControl>
+              <FormLabel>Email</FormLabel>
+              <Input name="email" type="email" placeholder="johndoe@email.com" required />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Password</FormLabel>
+              <Input name="password" type="password" placeholder="Enter password" required />
+            </FormControl>
+            <Button type="submit" sx={{ mt: 2, backgroundColor: "primary.solidBg" }}>
+              Log in
+            </Button>
+          </form>
+
           <Typography
             endDecorator={<Link href="/signup">Sign up</Link>}
-            sx={{ fontSize: 'sm', alignSelf: 'center' }}
+            sx={{ fontSize: "sm", alignSelf: "center", color: "gray" }}
           >
             Don&apos;t have an account?
           </Typography>
@@ -80,6 +95,6 @@ function Login() {
       </main>
     </CssVarsProvider>
   );
-}
+};
 
 export default Login;
