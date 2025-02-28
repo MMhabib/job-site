@@ -13,7 +13,7 @@ import Link from "@mui/joy/Link";
 import Alert from "@mui/joy/Alert";
 
 const Login = () => {
-  const { signInUser } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
 
-    signInUser(email, password)
+    login(email, password)
       .then((userCredential) => {
         setSuccess("Login successful!");
         setError("");

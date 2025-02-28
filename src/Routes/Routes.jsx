@@ -6,25 +6,30 @@ import Signup from "../Components/Signup";
 
 
 
-const router=createBrowserRouter([
-    {
-      path: "/",
-      element: <App></App>,
-      children:[
-        {
-            path:'/',
-            element:<Home></Home>
-        },
-        {
-            path:'/login',
-            element:<Login/>
-        },
-        {
-            path:'/signup',
-            element:<Signup/>
-        },
-      ]
-    },
-  ]);
+import Createjob from "../Jobs/Createjob";
+import PrivateRoute from "./Privateroute";
 
-  export default router;
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/login", element: <Login /> },
+      { path: "/signup", element: <Signup /> },
+
+      // 🔒 Private Route Wrapper for Job Operations
+      // {
+      //   path: "/",
+      //   element: <PrivateRoute />,
+      //   children: [
+      //     { path: "/createjob", element: <Createjob /> },
+      //     // { path: "/editjob/:id", element: <EditJob /> },
+      //     // { path: "/jobdetails/:id", element: <JobDetails /> },
+      //   ],
+      // },
+    ],
+  },
+]);
+
+export default router;

@@ -1,70 +1,77 @@
-/* eslint-disable react-refresh/only-export-components */
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
+import { createContext, useEffect, useState } from "react";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged 
 } from "firebase/auth";
-import { createContext, useState, useEffect } from "react";
-import auth from "../firebase/firebase.config";
+import app from "../firebase/firebase.config"; // Ensure Firebase is initialized
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
+const auth = getAuth(app);
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem("authToken") || null);
 
-  // signup
-  const createUser = (email, password) => {
+  // 🔹 Signup User
+  const signUp = async (email, password) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
-        const idToken = userCredential.user.getIdToken();
-        setUser(userCredential.user);
-        setToken(idToken);
-        localStorage.setItem("authToken", idToken);
-        return idToken;
-      }
-    );
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // signin
-  const signInUser = (email, password) => {
+  // 🔹 Login User & Get JWT Token
+  const login = async (email, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
-        const idToken = userCredential.user.getIdToken();
-        setUser(userCredential.user);
-        setToken(idToken);
-        localStorage.setItem("authToken", idToken);
-        return idToken;
-      }
-    );
-  };
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    const loggedInUser = res.user;
 
-  // logout
-  const logout = () => {
-    setLoading(true);
-    return signOut(auth).then(() => {
-      setUser(null);
-      setToken(null);
-      localStorage.removeItem("authToken");
+    // Get JWT token from backend
+    const response = await fetch("http://localhost:5000/auth/token", {
+      method: "POST",
+      credentials: "include", // Allow cookies for JWT storage
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: loggedInUser.email }),
     });
+
+    if (!response.ok) {
+      throw new Error("Failed to get token");
+    }
+
+    setUser(loggedInUser);
+    setLoading(false);
+    return res;
   };
 
-  // Automatically get user & token on page load
+  // 🔹 Logout User & Remove JWT
+  const logout = async () => {
+    setLoading(true);
+    await fetch("http://localhost:5000/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    await signOut(auth);
+    setUser(null);
+    setLoading(false);
+  };
+
+  // 🔹 Listen for Auth State Changes
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        currentUser.getIdToken().then((idToken) => {
-          setUser(currentUser);
-          setToken(idToken);
-          localStorage.setItem("authToken", idToken);
+        setUser(currentUser);
+
+        // Refresh JWT on reload
+        await fetch("http://localhost:5000/auth/token", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: currentUser.email }),
         });
       } else {
         setUser(null);
-        setToken(null);
-        localStorage.removeItem("authToken");
       }
       setLoading(false);
     });
@@ -72,11 +79,9 @@ const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const authInfo = { user, token, loading, createUser, signInUser, logout };
-
   return (
-    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, loading, signUp, login, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
-
-export default AuthProvider;
