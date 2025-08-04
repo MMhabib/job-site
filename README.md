@@ -1,8 +1,44 @@
-# React + Vite
+# Job-Site
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern full-stack job portal built with React, Tailwind CSS, shadcn/ui on the frontend, and Express.js with MongoDB on the backend. This application allows employers to post jobs and job seekers to apply for them.
 
-Currently, two official plugins are available:
+## 🔗 Live Site
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[🌐 Visit Live Site](https://job-portal-client-u5ru.onrender.com) <!-- Replace with your actual live client URL if different -->
+
+---
+
+## 🚀 Features
+
+- 🔐 **Authentication** with JWT and cookies (login/signup)
+- 🧑‍💼 **Employer Panel** to create, update, and delete job posts
+- 👨‍💻 **Job Seeker Panel** to browse and apply for jobs
+- 🗂️ **Job Filtering** by type and category
+- 💻 **Responsive Design** using Tailwind CSS and shadcn/ui
+- ⚙️ **RESTful API** integration with full backend functionality
+- 📦 **MongoDB** for data storage (users, jobs, applications)
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- [React.js](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Axios](https://axios-http.com/)
+
+### Backend
+- [Node.js](https://nodejs.org/)
+- [Express.js](https://expressjs.com/)
+- [MongoDB](https://www.mongodb.com/)
+- [Mongoose](https://mongoosejs.com/)
+- [JWT](https://jwt.io/)
+- [Cookie Parser](https://www.npmjs.com/package/cookie-parser)
+- [dotenv](https://www.npmjs.com/package/dotenv)
+
+---
+
+## 📁 Folder Structure
+
+
