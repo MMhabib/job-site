@@ -4,7 +4,7 @@ A modern full-stack job portal built with React, Tailwind CSS, shadcn/ui on the 
 
 ## 🔗 Live Site
 
-[🌐 Visit Live Site](https://job-portal-client-u5ru.onrender.com) <!-- Replace with your actual live client URL if different -->
+[🌐 Visit Live Site](https://job-portal-six-zeta-99.vercel.app/) <!-- Replace with your actual live client URL if different -->
 
 ---
 
